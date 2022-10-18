@@ -5,25 +5,29 @@ counts <- as.matrix(read.csv(
   sep = "\t",
   row.names = "Geneid"
 ))
+colnames(counts) <- sub("T[I]*_.+$", "", colnames(counts))
 
 counts_clin <- read.csv(
   file = "~/Data/ARCTIC/ARCTIC_Clinical_data_reduced_MP.csv",
   row.names = 1
 )
+counts_clin <- na.omit(counts_clin)
 
-counts_clin
+nrow(counts_clin)
 
-counts_clin[1]
+rownames(counts_clin)
+colnames(counts)
 
-colnames(counts) <- sub("T[I]*_.+$", "", colnames(counts))
+intersect <- Reduce(intersect, list(colnames(counts), rownames(counts_clin)))
+counts <- counts[, intersect]
+counts_clin <- counts_clin[intersect, ]
 
-all(counts_clin[1] %in% colnames(counts))
-
+all(ncol(counts[, intersect]) == nrow(counts_clin[intersect, ]))
 
 dds <- DESeqDataSetFromMatrix(
   countData = counts,
-  colData = coldata,
-  design = ~condidtion
+  colData = counts_clin,
+  design = ~Responder_type
 )
 
 head(counts, 2)
