@@ -30,4 +30,25 @@ dds <- DESeqDataSetFromMatrix(
   design = ~Responder_type
 )
 
-head(counts, 2)
+dds$Responder_type <- factor(dds$Responder_type, levels = c("0", "1", "2"))
+
+dds <- DESeq(dds)
+
+res <- results(dds)
+res
+
+resultsNames(dds)
+
+summary(res)
+
+res05 <- results(dds, alpha = 0.05)
+summary(res05)
+
+sum(res$padj < 0.1, na.rm = TRUE)
+sum(res05$padj < 0.05, na.rm = TRUE)
+
+## MA-plot
+plotMA(res, ylim = c(-2, 2))
+
+## Plot counts
+plotCounts(dds, gene = which.min(res$padj), intgroup = "Tumor_type")
