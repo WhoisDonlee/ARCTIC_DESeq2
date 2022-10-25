@@ -1,4 +1,6 @@
 library("DESeq2")
+library("ggplot2")
+library("Glimma")
 
 ## Import count matrix generated with featureCounts
 counts <- as.matrix(read.csv(
