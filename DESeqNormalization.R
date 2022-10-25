@@ -36,7 +36,8 @@ counts_clin <- counts_clin[intersect, ]
 all(ncol(counts[, intersect]) == nrow(counts_clin[intersect, ]))
 all(nrow(counts_clin[intersect, ]) == ncol(counts[, intersect]))
 
-factor(dds$Responder_type)
+counts_clin$Responder_type <- as.factor(counts_clin$Responder_type)
+counts_clin$Responder_type
 
 ## Create DESeq dataset
 dds <- DESeqDataSetFromMatrix(
@@ -63,14 +64,24 @@ res
 results(dds, name = "Responder_type_2_vs_0")
 results(dds, name = "Responder_type_1_vs_0")
 
+res_0_1 <- results(dds, contrast = c("Responder_type", "0", "1"))
+res_0_2 <- results(dds, contrast = c("Responder_type", "0", "2"))
+res_1_2 <- results(dds, contrast = c("Responder_type", "1", "2"))
+
+res_0_1
+res_0_2
+res_1_2
+
 resultsNames(dds)
 
 ## Shrinking Log Fold Change
 resultsNames(dds)
+
 reslfc <- lfcShrink(dds,
-  contrast = c("Responder_type", "1", "2"),
+  contrast = c("Responder_type", "0", "2"),
   type = "ashr"
 )
+
 reslfc
 
 ## Order results by smalles p value
