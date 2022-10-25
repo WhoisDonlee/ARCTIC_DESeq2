@@ -115,7 +115,7 @@ htmlwidgets::saveWidget(glimmaVolcano(dds, groups = dds$Responder_type), "Volcan
 plotMA(res, ylim = c(-2, 2))
 
 ## MA plot with shrunken LFC
-plotMA(resLFC, ylim = c(-2, 2))
+plotMA(reslfc, ylim = c(-2, 2))
 
 ## Read counts for the gene with the lowest p value
 plotCounts(dds, gene = which.min(res$padj), intgroup = "Responder_type")
@@ -131,7 +131,9 @@ ggplot(d, aes(x = Responder_type, y = count)) +
 
 mcols(res)$description
 
+## Data transformation - vst: variance stabilizing transformation
 vsd <- vst(dds, blind = FALSE)
+## Data transformation - vst: variance stabilizing transformation
 ntd <- normTransform(dds)
 
 meanSdPlot(assay(ntd))
