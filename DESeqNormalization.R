@@ -3,6 +3,7 @@ library("ggplot2")
 library("Glimma")
 library("pheatmap")
 library("vsn")
+library("RColorBrewer")
 
 ## Import count matrix generated with featureCounts
 counts <- as.matrix(read.csv(
@@ -151,6 +152,24 @@ pheatmap(assay(vsd)[select, ],
   cluster_rows = FALSE, show_rownames = FALSE,
   cluster_cols = FALSE, annotation_col = df
 )
+
+sample_dist <- dist(t(assay(vsd)))
+
+sampleDistMatrix <- as.matrix(sample_dist)
+
+## Plot a sample-to-sample heatmap
+rownames(sampleDistMatrix) <- paste(vsd$Responder_type, vsd$Tumor_type, sep = "-")
+colnames(sampleDistMatrix) <- NULL
+colors <- colorRampPalette(rev(brewer.pal(9, "Blues")))(255)
+
+pheatmap(sampleDistMatrix,
+  clustering_distance_rows = sample_dist,
+  clustering_distance_cols = sample_dist,
+  col = colors
+)
+
+## Principal component plot of samples
+plotPCA(vsd, intgroup = c("Responder_type", "Tumor_type"))
 sum(res$padj < 0.1, na.rm = TRUE)
 sum(res05$padj < 0.05, na.rm = TRUE)
 
