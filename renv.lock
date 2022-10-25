@@ -852,6 +852,18 @@
       "Hash": "18e9c28c1d3ca1560ce30658b22ce104",
       "Requirements": []
     },
+    "mixsqp": {
+      "Package": "mixsqp",
+      "Version": "0.3-47",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "stephenslab",
+      "RemoteRepo": "mixsqp",
+      "RemoteRef": "master",
+      "RemoteSha": "0a80f7e0977f21a72296a744afe62dabe7e476f0",
+      "Requirements": []
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
