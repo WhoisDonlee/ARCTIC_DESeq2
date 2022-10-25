@@ -1,6 +1,8 @@
 library("DESeq2")
 library("ggplot2")
 library("Glimma")
+library("pheatmap")
+library("vsn")
 
 ## Import count matrix generated with featureCounts
 counts <- as.matrix(read.csv(
@@ -18,6 +20,8 @@ counts_clin <- read.csv(
 )
 ## Remove rows containing NA
 counts_clin <- na.omit(counts_clin)
+
+colnames(counts_clin)
 
 ## Count rows in clinical csv and in countmatrix
 nrow(counts_clin)
@@ -116,14 +120,35 @@ plotMA(resLFC, ylim = c(-2, 2))
 ## Read counts for the gene with the lowest p value
 plotCounts(dds, gene = which.min(res$padj), intgroup = "Responder_type")
 
-d <- plotCounts(dds, gene = which.min(res$padj), intgroup = "Responder_type", returnData = TRUE)
-library("ggplot2")
+d <- plotCounts(dds,
+  gene = which.min(res$padj),
+  intgroup = "Responder_type",
+  returnData = TRUE
+)
 ggplot(d, aes(x = Responder_type, y = count)) +
   geom_point(position = position_jitter(w = 0.1, h = 0)) +
   scale_y_log10(breaks = c(25, 100, 400))
 
 mcols(res)$description
 
+vsd <- vst(dds, blind = FALSE)
+ntd <- normTransform(dds)
+
+meanSdPlot(assay(ntd))
+meanSdPlot(assay(vsd))
+
+select <- order(rowMeans(counts(dds, normalized = TRUE)),
+  decreasing = TRUE
+)[1:20]
+df <- as.data.frame(colData(dds)[, c("Responder_type", "Tumor_type")])
+pheatmap(assay(ntd)[select, ],
+  cluster_rows = FALSE, show_rownames = FALSE,
+  cluster_cols = FALSE, annotation_col = df
+)
+pheatmap(assay(vsd)[select, ],
+  cluster_rows = FALSE, show_rownames = FALSE,
+  cluster_cols = FALSE, annotation_col = df
+)
 sum(res$padj < 0.1, na.rm = TRUE)
 sum(res05$padj < 0.05, na.rm = TRUE)
 
