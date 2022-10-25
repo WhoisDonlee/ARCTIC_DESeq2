@@ -98,11 +98,14 @@ res05 <- results(dds, alpha = 0.05)
 summary(res05)
 sum(res05$padj < 0.05, na.rm = TRUE)
 
-library(Glimma)
 
 glimmaMDS(dds)
+glimmaMA(dds, counts = counts, groups = dds$Responder_type)
+glimmaVolcano(dds, groups = dds$Responder_type)
 
-glimmaMA(dds)
+htmlwidgets::saveWidget(glimmaMDS(dds), "MDS-plot.html")
+htmlwidgets::saveWidget(glimmaMA(dds, groups = dds$Responder_type), "MA-plot.html")
+htmlwidgets::saveWidget(glimmaVolcano(dds, groups = dds$Responder_type), "Volcano-plot.html")
 
 ## MA plot
 plotMA(res, ylim = c(-2, 2))
