@@ -692,6 +692,12 @@
       "Hash": "36b4265fb818f6a342bed217549cd896",
       "Requirements": []
     },
+    "hexbin": {
+      "Package": "hexbin",
+      "Version": "1.28.2",
+      "Source": "Repository",
+      "Requirements": []
+    },
     "htmltools": {
       "Package": "htmltools",
       "Version": "0.5.3",
